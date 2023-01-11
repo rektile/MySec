@@ -59,18 +59,17 @@ class MyNetScan:
 
         print("Starting scan...\n")
 
-
         # Init address
         address = Address(self.chosenIp)
 
-        # Init socket we are going to use to connect to the ports
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-        # Set a timeout for faster result -> inconsistent
-        s.settimeout(0.5)
-
         # Loop trough port range
         for port in range(self.MINPORT, self.MAXPORT + 1):
+
+            # Init socket we are going to use to connect to the ports
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+            # Set a timeout for faster result -> inconsistent
+            s.settimeout(0.5)
 
             # Init current port obj and assign scanned port
             curPort = Port()
@@ -78,11 +77,11 @@ class MyNetScan:
 
             # Connect to port
             result = s.connect_ex((self.chosenIp, port))
-
+            print(port)
             # Check if port is open
             if result == 0:
+                print("open")
                 curPort.isOpen = True
-
                 try:
                     # Grab banner
                     curPort.banner = s.recv(1024)
@@ -95,6 +94,7 @@ class MyNetScan:
             # Add current scanned port to address
             address.ports[port] = curPort
 
+            s.close()
         # Add address to scanned address list
         self.addressList.append(address)
 
