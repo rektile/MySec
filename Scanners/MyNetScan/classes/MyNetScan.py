@@ -7,11 +7,12 @@ from concurrent.futures import ThreadPoolExecutor
 
 class MyNetScan:
 
-    def __init__(self, _chosenIp, _chosenPort, _verbose, _maxWorkers):
+    def __init__(self):
 
-        self.chosenIp = _chosenIp
-        self.chosenPort = _chosenPort
-        self.verbose = _verbose
+        self.chosenIp = None
+        self.chosenPort = None
+        self.verbose = None
+        self.maxWorkers = None
 
         self.ipPattern = re.compile("^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$")
         self.portRange = re.compile("([0-9]+)-([0-9]+)")
@@ -22,11 +23,21 @@ class MyNetScan:
         self.MINPORTALLOWED = 0
         self.MAXPORTALLOWED = 65535
 
-        self.maxWorkers = _maxWorkers
+    def argumentParser(self, args):
+        self.chosenIp = args.ip
+        self.verbose = args.verbose
+        self.maxWorkers = args.workers
+        self.chosenPort = args.port
+
 
     def validatePort(self):
-        if self.chosenPort.isdigit():
+
+        if not self.chosenPort:
+            self.MINPORT = self.MINPORTALLOWED
+            self.MAXPORT = self.MAXPORTALLOWED
+        elif self.chosenPort.isdigit():
             self.MINPORT = self.MAXPORT = int(self.chosenPort)
+
         else:
             validRange = self.portRange.search(self.chosenPort.replace(" ", ""))
             if validRange:

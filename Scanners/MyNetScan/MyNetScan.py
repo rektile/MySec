@@ -13,8 +13,7 @@ parser.add_argument("-i",
 parser.add_argument("-p",
                     "--port",
                     help="Port or range of ports you want to scan e.g. 0-1000.",
-                    nargs="?",
-                    required=True)
+                    nargs="?")
 
 
 parser.add_argument("-w",
@@ -30,8 +29,8 @@ parser.add_argument("-v",
 
 args = parser.parse_args()
 
-scanner = MyNetScan(args.ip, args.port, args.verbose, args.workers)
-
+scanner = MyNetScan()
+scanner.argumentParser(args)
 scanner.run()
 
 
