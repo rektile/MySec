@@ -78,39 +78,43 @@ class MyNetScan:
             if self.verbose:
                 print(f"[*] Scanning port {port}")
 
-            # Init socket we are going to use to connect to the ports
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-            # Set a timeout for faster result -> inconsistent
-            s.settimeout(0.5)
-
-            # Init current port obj and assign scanned port
-            curPort = Port()
-            curPort.portNum = port
-
-            # Connect to port
-            result = s.connect_ex((self.chosenIp, port))
-
-            # Check if port is open
-            if result == 0:
-                curPort.isOpen = True
-                try:
-                    # Grab banner
-                    curPort.banner = s.recv(1024)
-                except TimeoutError as E:
-                    curPort.banner = "/"
-
-            else:
-                curPort.isOpen = False
+            curPort = self.scanPort(address, port)
 
             # Add current scanned port to address
             address.ports[port] = curPort
 
-            s.close()
         # Add address to scanned address list
         self.addressList.append(address)
 
+    def scanPort(self, address, port):
+        # Init socket we are going to use to connect to the ports
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
+        # Set a timeout for faster result -> inconsistent
+        s.settimeout(0.5)
+
+        # Init current port obj and assign scanned port
+        curPort = Port()
+        curPort.portNum = port
+
+        # Connect to port
+        result = s.connect_ex((self.chosenIp, port))
+
+        # Check if port is open
+        if result == 0:
+            curPort.isOpen = True
+            try:
+                # Grab banner
+                curPort.banner = s.recv(1024)
+            except TimeoutError as E:
+                curPort.banner = "/"
+
+        else:
+            curPort.isOpen = False
+
+        s.close()
+
+        return curPort
     def showFound(self):
 
         # Set header for the table
