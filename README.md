@@ -7,9 +7,6 @@ The purpose of this repository is to recreate commonly used penetration testing 
 ## MyNetScan
 This simple scanner scans a single ip for the specified open ports.
 
-This is not made to be efficient, it is just a POC.  
-That's why it doesnt use threading.
-
 ### How to use ?
 
 ```bash
