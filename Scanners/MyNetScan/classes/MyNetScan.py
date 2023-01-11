@@ -3,10 +3,11 @@ import re
 from classes.Address import Address
 from classes.Port import Port
 from tabulate import tabulate
+from concurrent.futures import ThreadPoolExecutor
 
 class MyNetScan:
 
-    def __init__(self, _chosenIp, _chosenPort, _verbose):
+    def __init__(self, _chosenIp, _chosenPort, _verbose, _maxWorkers):
 
         self.chosenIp = _chosenIp
         self.chosenPort = _chosenPort
@@ -20,6 +21,8 @@ class MyNetScan:
         self.MAXPORT = None
         self.MINPORTALLOWED = 0
         self.MAXPORTALLOWED = 65535
+
+        self.maxWorkers = _maxWorkers
 
     def validatePort(self):
         if self.chosenPort.isdigit():
@@ -72,21 +75,32 @@ class MyNetScan:
         # Init address
         address = Address(self.chosenIp)
 
-        # Loop trough port range
-        for port in range(self.MINPORT, self.MAXPORT + 1):
+        with ThreadPoolExecutor(max_workers=None) as executor:
+            # Create a list to hold the future results
+            futures = []
 
-            if self.verbose:
-                print(f"[*] Scanning port {port}")
+            # Loop through port range
+            for port in range(self.MINPORT, self.MAXPORT + 1):
 
-            curPort = self.scanPort(address, port)
+                # Submit the scanPort method as a task to the executor
+                future = executor.submit(self.scanPort, port)
+                futures.append(future)
 
-            # Add current scanned port to address
-            address.ports[port] = curPort
+            # Wait for all futures to complete and retrieve the results
+            for future in futures:
+                curPort = future.result()
+
+                # Add current scanned port to address
+                address.ports[curPort.portNum] = curPort
 
         # Add address to scanned address list
         self.addressList.append(address)
 
-    def scanPort(self, address, port):
+    def scanPort(self, port):
+
+        if self.verbose:
+            print(f"[*] Scanning port {port}")
+
         # Init socket we are going to use to connect to the ports
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
