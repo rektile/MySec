@@ -1,7 +1,5 @@
 # MySec
-This repo is made for me to make tools which a lot of pentesters use in the real world.
-We might use these tools but some of us dont actually know what is going on under the hood.
-Here i try to remake some tools i have a better understanding of what's going on.
+The purpose of this repository is to recreate commonly used penetration testing tools in order to gain a deeper understanding of how they work. While these tools are often used by penetration testers, some individuals may not fully understand the underlying mechanics. By remaking these tools, this repository aims to provide a hands-on and in-depth exploration of the tools' functionality and ultimately improve proficiency and effectiveness in their usage.
 
 
 # Scanners
