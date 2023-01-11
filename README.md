@@ -20,12 +20,12 @@ cd ./MySec/Scanners/MyNetScan
 pip install -r requirements.txt
 
 # Run script with parameters
-python3 MyNetScan.py {IP} {PORT}
+python3 MyNetScan.py -i {IP} -p {PORT}
 ```
 
 ### Arguments
-IP: The ip you want to scan e.g. 192.168.0.1  
-PORT: The port you want to scan, this can be a single int or a range e.g 80 or 0-1000
+-i: The ip you want to scan e.g. 192.168.0.1  
+-p: The port you want to scan, this can be a single int or a range e.g 80 or 0-1000
 
 
 ## MyArpScan
